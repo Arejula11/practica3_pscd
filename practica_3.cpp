@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-//#include "Semaphore_V4.hpp"
+#include "Semaphore_V4.hpp"
 
 using namespace std;
 
@@ -120,6 +120,9 @@ int main(){
     int silla2; // su valor es el del estudiante sentado
     int resultado[N_EST];
     bool hayFila;
+    Semaphore* s3;
+    Semaphore* r[37];
+
 
     //cargar "datos.txt" en "D"
     leerFich(D);
