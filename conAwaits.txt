@@ -1,17 +1,10 @@
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-//#include "Semaphore_V4.hpp"
-
-using namespace std;
-
 const int N_EST = 60; //# de estudiantes
 const int N_FIL = N_EST/2; //# de filas en la matriz 
 const int N_COL = 1000; //# de columnas
 
 //---------------------------------------------------- 
-//Pre: <fila> es un  ́ındice de fila de <D>
-//Post: devuelve el m ́aximo de la fila <fila>
+//Pre: <fila> es un  índice de fila de <D>
+//Post: devuelve el máximo de la fila <fila>
 int maxFila(int D[N_FIL][N_COL],int fila) {
     int max;
     for(int i=0; i<N_COL; i++){
@@ -23,7 +16,7 @@ int maxFila(int D[N_FIL][N_COL],int fila) {
 }
 
 
-//Pre: <fila> es un  ́ındice de fila de <D>
+//Pre: <fila> es un  índice de fila de <D>
 //Post: devuelve la suma de los els. de la fila <fila> 
 int sumaFila(int D[N_FIL][N_COL],int fila) {
     int sum = 0;
@@ -38,39 +31,37 @@ int sumaFila(int D[N_FIL][N_COL],int fila) {
 //----------------------------------------------------
 void Estudiante(int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& silla, int resultado[N_EST], bool examen_fin[N_EST], int& silla1, int& silla2, int pareja[]) {
     // esperar por una silla libre
-    //<await (silla<2) // una de las dos esté libre
+    <await (silla<2) // una de las dos esté libre
         silla++;
         if(silla = 0){
             silla1 = nip;
         }else{
             silla2 = nip;
         }
-    //> 
+    > 
     
     //esperar me sea asignada pareja y fila
-   // <await (hayFila = true && pareja[nip]>=0 )
+   /<await (hayFila = true && pareja[nip]>=0 )
         int miFila = fila;
         int miPareja = pareja[nip];
-        silla = 0; //>
+        silla = 0; >
                 
         if (nip<miPareja) {
             // calcular máx de mi 
-            //<
+            <
             resultado[nip] = maxFila(D,miFila);
             //hacérselo llegar a mi pareja
-            examen_fin[nip]=true; //>
+            examen_fin[nip]=true; >
         }
         else {
             // calcular la suma de mi fila 
             resultado[nip] = sumaFila(D, miFila);
             //coger info de max (de mi pareja) 
-            //<await(examen_fin[miPareja]= true)>
+            <await(examen_fin[miPareja]= true)>
             //mostrar resultados
             cout<< left << setw(6)<<miFila << "|  " <<miPareja <<"-"<< setw(4)<<nip << "|  "<< setw(7) <<resultado[miPareja]<< "|  "<<resultado[nip]<<endl;
             //comunicar finalizacíon
-            //<
-            examen_fin[nip] = true;
-            //>
+            <examen_fin[nip] = true>;
             //----------------------------------------------------
 
     } 
@@ -78,19 +69,18 @@ void Estudiante(int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& sil
 void Profesor (int& silla, int& silla1, int& silla2, int pareja[N_EST], int fila, bool& hayFila) {
     for(int i=0; i<N_FIL; i++) {
         // esperar a que haya dos
-        //<await silla = 2>
+        <await silla = 2
         //comunicar a cada uno su pareja, y la fila que les toca
-        //<
         pareja[silla1]= silla2;
         pareja[silla2] = silla1;
         fila = i;
-        hayFila = true; //>
+        hayFila = true;>
 
     }
     // esperar que todos hayan terminado
-    //<await terminado true
+    <await terminado true
     //fin examen 
-    //>
+    >
 
 }
 
