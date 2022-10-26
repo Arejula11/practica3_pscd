@@ -7,7 +7,8 @@ const int N_EST = 60; //# de estudiantes
 const int N_FIL = N_EST/2; //# de filas en la matriz 
 const int N_COL = 1000; //# de columnas
 
-//---------------------------------------------------- //Pre: <fila> es un  ́ındice de fila de <D>
+//---------------------------------------------------- 
+//Pre: <fila> es un  ́ındice de fila de <D>
 //Post: devuelve el m ́aximo de la fila <fila>
 int maxFila(int D[N_FIL][N_COL],int fila) {
     int max;
