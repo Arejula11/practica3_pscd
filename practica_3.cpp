@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <thread>
 #include "Semaphore_V4.hpp"
 
 using namespace std;
@@ -35,8 +36,12 @@ int sumaFila(int D[N_FIL][N_COL],int fila) {
     return sum; 
 }
 
+void pasarTestigo(){
+
+}
+
 //----------------------------------------------------
-void Estudiante(int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& silla, int resultado[N_EST], bool examen_fin[N_EST], int& silla1, int& silla2, int pareja[]) {
+void Estudiante(int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& silla, int resultado[N_EST], bool examen_fin[N_EST], int& silla1, int& silla2, int pareja[], Semaphore r[]) {
     // esperar por una silla libre
     //<await (silla<2) // una de las dos esté libre
         silla++;
@@ -75,7 +80,7 @@ void Estudiante(int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& sil
 
     } 
 }
-void Profesor (int& silla, int& silla1, int& silla2, int pareja[N_EST], int fila, bool& hayFila) {
+void Profesor (int& silla, int& silla1, int& silla2, int pareja[N_EST], int& fila, bool& hayFila, Semaphore r[]) {
     for(int i=0; i<N_FIL; i++) {
         // esperar a que haya dos
         //<await silla = 2>
@@ -112,7 +117,7 @@ void leerFich(int D[N_FIL][N_COL]){
 int main(){
     int D[N_FIL][N_COL]; //para almacenar los datos
     int fila = 0;  //cada pareja coger ́a una
-    int pareja[N_EST]={-1}; //pareja[i] ser ́a la pareja asignada
+    int pareja[N_EST]={-1}; //pareja[i] será la pareja asignada
     bool examen_fin[N_EST] = {false};
     bool estu_fin[N_FIL][2] = {false};
     int silla = 0;  // 0 = 0 sillas ocupadas , 1 = una silla ocupada, 2 = 2 sillas ocupadas
@@ -126,6 +131,11 @@ int main(){
 
     //cargar "datos.txt" en "D"
     leerFich(D);
+    thread P[61];
+    for(int i=0; i<N_EST; i++){
+        P[i]= thread(&Estudiante, i, ref(fila), ref(hayFila), D, ref(silla), ref(resultado), ref(examen_fin), ref(silla1), ref(silla2), ref(pareja), ref(r));
+    }
+    P[60]= thread(&Profesor, ref(silla), ref(silla1), ref(silla2), ref(pareja), ref(fila), ref(hayFila));
     cout << "Prueba finalizada\n";
     return 0;
 
