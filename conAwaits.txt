@@ -57,9 +57,9 @@ void Estudiante(int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& sil
             // calcular la suma de mi fila 
             resultado[nip] = sumaFila(D, miFila);
             //coger info de max (de mi pareja) 
-            <await(examen_fin[miPareja]= true)>
+            <await(examen_fin[miPareja]= true)
             //mostrar resultados
-            cout<< left << setw(6)<<miFila << "|  " <<miPareja <<"-"<< setw(4)<<nip << "|  "<< setw(7) <<resultado[miPareja]<< "|  "<<resultado[nip]<<endl;
+            cout<< left << setw(6)<<miFila << "|  " <<miPareja <<"-"<< setw(4)<<nip << "|  "<< setw(7) <<resultado[miPareja]<< "|  "<<resultado[nip]<<endl;>
             //comunicar finalizacíon
             <examen_fin[nip] = true>;
             //----------------------------------------------------
@@ -78,7 +78,7 @@ void Profesor (int& silla, int& silla1, int& silla2, int pareja[N_EST], int fila
 
     }
     // esperar que todos hayan terminado
-    <await terminado true
+    <await terminado = 30
     //fin examen 
     >
 
