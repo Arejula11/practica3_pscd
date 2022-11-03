@@ -84,80 +84,76 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
     // esperar por una silla libre
     //<await (silla<2) // una de las dos esté libre
    
-        testigo.wait();
-        if(silla>=2){
-            c++;
-            testigo.signal();
-            rtercero.wait();      
+    testigo.wait();
+    if(silla>=2){
+        c++;
+        testigo.signal();
+        rtercero.wait();      
             
-        }
+    }
         
-        if(silla == 0){
-            silla1 = nip;
-            silla++;
- // cout<<silla1<<endl;
-        }else if(silla == 1){
-            silla2 = nip;
-            silla++;
+    if(silla == 0){
+        silla1 = nip;
+        silla++;
+// cout<<silla1<<endl;
+    }else if(silla == 1){
+           silla2 = nip;
+           silla++;
 // cout<<silla2<<endl;
 // cout<<"SILLA"+ to_string(silla)+ '\n';
-        }
+    }
         
-        pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);
-        
-    //> 
-    
+    pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);   //> 
     //esperar me sea asignada pareja y fila
-   // <await (hayFila = true && pareja[nip]>=0 )
-        testigo.wait();
-        if(!hayFila){
-            b++;
-            testigo.signal();
-            rsegundo.wait();
+    // <await (hayFila = true && pareja[nip]>=0 )
+    testigo.wait();
+    if(!hayFila){
+        b++;
+        testigo.signal();
+        rsegundo.wait();
             
-        }
-        int miFila = fila;
-        int miPareja = pareja[nip];
-        silla = 0; 
-        hayFila = false;
-        pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
+    }
+    int miFila = fila;
+    int miPareja = pareja[nip];
+    silla = 0; 
+    hayFila = false;
+    pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
          
-        if (nip<miPareja) {
-            // calcular máx de mi 
-            resultado[nip] = maxFila(D,miFila); // quitar exclusion mutua
-            //hacérselo llegar a mi pareja
-            examen_fin[nip]=true; 
+    if (nip<miPareja) {
+        // calcular máx de mi 
+        resultado[nip] = maxFila(D,miFila); // quitar exclusion mutua
+        //hacérselo llegar a mi pareja
+        examen_fin[nip]=true; 
             
+    }
+    else {
+        // calcular la suma de mi fila 
+        resultado[nip] = sumaFila(D, miFila);
+        //coger info de max (de mi pareja) 
+        //<await(examen_fin[miPareja]= true)
+        testigo.wait();
+        if(!examen_fin[miPareja]){
+            a[miPareja]++;
+            testigo.signal();
+            rprimero[miPareja]->wait();
         }
-        else {
-            // calcular la suma de mi fila 
-            resultado[nip] = sumaFila(D, miFila);
-            //coger info de max (de mi pareja) 
-            //<await(examen_fin[miPareja]= true)
-            testigo.wait();
-            if(!examen_fin[miPareja]){
-                a[miPareja]++;
-                testigo.signal();
-                rprimero[miPareja]->wait();
-            }
-            //mostrar resultados
-            pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//> // cambiar couts
-            // cout << left << setw(6) << to_string(miFila) + "|  " + to_string(miPareja) +"-"<< setw(4)<<nip +  "|  " << setw(7) << to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
-            cout << to_string(miFila) + "|  " + to_string(miPareja) + "-" + to_string(nip) +  "|  " + to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
-            //comunicar finalizacíon
-            //<
-            testigo.wait();
-            examen_fin[nip] = true;
-            terminado++;
-            pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
-            //----------------------------------------------------
+        //mostrar resultados
+        pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//> // cambiar couts
+        // cout << left << setw(6) << to_string(miFila) + "|  " + to_string(miPareja) +"-"<< setw(4)<<nip +  "|  " << setw(7) << to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
+        cout << to_string(miFila) + "|  " + to_string(miPareja) + "-" + to_string(nip) +  "|  " + to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
+        //comunicar finalizacíon
+        //<
+        testigo.wait();
+        examen_fin[nip] = true;
+        terminado++;
+        pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
+        //----------------------------------------------------
         } 
 }
 void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bool& hayFila, Semaphore* rprimero[], Semaphore& rsegundo, Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, bool examen_fin[],const int terminado, Semaphore& testigo, int a[], int& b, int& c, int& d, int&e){
     
     
-    for(int i=0; i<N_FIL; i++) {
-        
+    for(int i=0; i<N_FIL; i++) {   
         // esperar a que haya dos
         //<await silla = 2
         testigo.wait(); //repasar todos   
@@ -169,7 +165,6 @@ void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bo
         pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
         //comunicar a cada uno su pareja, y la fila que les toca
         //<
-        
         testigo.wait();
         pareja[silla1]= silla2;
         pareja[silla2] = silla1;
@@ -184,13 +179,13 @@ void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bo
     
     //<await(terminado=30)
     //repasar
-        testigo.wait();
-        if(terminado!=30){
-            d++;
-            testigo.signal();
-            rcuarto.wait();
-            
-        }
+    testigo.wait();
+    if(terminado!=30){
+        d++;
+        testigo.signal();
+        rcuarto.wait();
+        
+    }
     pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);
             //fin examen>
 
