@@ -37,7 +37,7 @@ int sumaFila(int D[N_FIL][N_COL],int fila) {
 }
 
 void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Semaphore* rprimero[], Semaphore* rsegundo[], Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, const int pareja[], const int terminado, const bool examen_fin[], int a[], int b[], int& c, int& d, int&e){
-    
+    bool  ifComple = false;
     
     for (int i = 0; i < N_EST; i++)
     {
@@ -45,19 +45,22 @@ void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Sema
        {
         a[i]--;
         rprimero[i]->signal();
+        ifComple = true;
        }
        
     }
     for (int i = N_EST; i < N_EST*2; i++)
     {
-       if (examen_fin[i] && b[i]>0)
+       if (examen_fin[i] && b[i]>0 && !ifComple )
        {
         b[i]--;
         rsegundo[i]->signal();
+        ifComple = true;
        }
        
     }
-    if (silla<2 && c>0){
+    if(!ifComple){
+        if (silla<2 && c>0){
         c--;
         rtercero.signal();
     
@@ -71,6 +74,8 @@ void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Sema
     }else{
         testigo.signal();
     }
+    }
+    
 
 }
 
