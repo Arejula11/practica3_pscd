@@ -32,21 +32,17 @@ int maxFila(int D[N_FIL][N_COL],int fila) {
 //Post: devuelve la suma de los els. de la fila <fila> 
 int sumaFila(int D[N_FIL][N_COL],int fila) {
     int sum = 0;
-    for (int i = 0; i < N_COL; i++)
-    {
+    for (int i = 0; i < N_COL; i++){
         sum += D[fila][i];
     }
-    
     return sum; 
 }
 
 void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Semaphore* rprimero[], Semaphore& rsegundo, Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, const int pareja[], const int terminado, const bool examen_fin[], int a[], int& b, int& c, int& d, int&e){
     bool  ifComple = false;
     
-    for (int i = 0; i < N_EST; i++)
-    {
-       if ( examen_fin[i] && a[i]>0)
-       {
+    for (int i = 0; i < N_EST; i++){
+       if ( examen_fin[i] && a[i]>0){
         a[i]--;
         rprimero[i]->signal();
         ifComple = true;
