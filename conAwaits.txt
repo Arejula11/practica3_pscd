@@ -32,26 +32,27 @@ int sumaFila(int D[N_FIL][N_COL],int fila) {
 void Estudiante(int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& silla, int resultado[N_EST], bool examen_fin[N_EST], int& silla1, int& silla2, int pareja[]) {
     // esperar por una silla libre
     <await (silla<2) // una de las dos esté libre
-        silla++;
+        
         if(silla = 0){
             silla1 = nip;
-        }else{
+            silla++;
+        }else if(silla==1){
             silla2 = nip;
+            silla++;
         }
     > 
     
     //esperar me sea asignada pareja y fila
-   /<await (hayFila = true && pareja[nip]>=0 )
+   /<await (hayFila = true)
         int miFila = fila;
         int miPareja = pareja[nip];
-        silla = 0; >
-                
+        levantado++;>
         if (nip<miPareja) {
             // calcular máx de mi 
-            <
+            
             resultado[nip] = maxFila(D,miFila);
             //hacérselo llegar a mi pareja
-            examen_fin[nip]=true; >
+            examen_fin[nip]=true; 
         }
         else {
             // calcular la suma de mi fila 
@@ -59,7 +60,7 @@ void Estudiante(int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& sil
             //coger info de max (de mi pareja) 
             <await(examen_fin[miPareja]= true)
             //mostrar resultados
-            cout<< left << setw(6)<<miFila << "|  " <<miPareja <<"-"<< setw(4)<<nip << "|  "<< setw(7) <<resultado[miPareja]<< "|  "<<resultado[nip]<<endl;>
+            cout<< left << setw(4)<<miFila << "|  " << setw(6) <<to_string(miPareja) + "-" + to_string(nip) << "|  "<< setw(7) <<resultado[miPareja]<< "|  "<<resultado[nip]<<endl;
             //comunicar finalizacíon
             <examen_fin[nip] = true>;
             //----------------------------------------------------
@@ -68,13 +69,17 @@ void Estudiante(int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& sil
 }
 void Profesor (int& silla, int& silla1, int& silla2, int pareja[N_EST], int fila, bool& hayFila) {
     for(int i=0; i<N_FIL; i++) {
+       
         // esperar a que haya dos
         <await silla = 2
-        //comunicar a cada uno su pareja, y la fila que les toca
-        pareja[silla1]= silla2;
-        pareja[silla2] = silla1;
-        fila = i;
-        hayFila = true;>
+            //comunicar a cada uno su pareja, y la fila que les toca
+            pareja[silla1]= silla2;
+            pareja[silla2] = silla1;
+            fila = i;
+            hayFila = true;>
+        <await (terminado == 2)
+            silla = 0;
+            hayFila = false;>
 
     }
     // esperar que todos hayan terminado
@@ -110,6 +115,7 @@ int main(){
     int silla2; // su valor es el del estudiante sentado
     int resultado[N_EST];
     bool hayFila;
+    int levantado = 0;
 
     //cargar "datos.txt" en "D"
     leerFich(D);
