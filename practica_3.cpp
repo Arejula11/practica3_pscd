@@ -35,6 +35,7 @@ int sumaFila(int D[N_FIL][N_COL],int fila) {
     for (int i = 0; i < N_COL; i++){
         sum += D[fila][i];
     }
+    
     return sum; 
 }
 
