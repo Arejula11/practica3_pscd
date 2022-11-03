@@ -149,7 +149,7 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
         } 
 }
 void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bool& hayFila, Semaphore* rprimero[], Semaphore* rsegundo[], Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, bool examen_fin[],const int terminado, Semaphore& testigo, int a[], int b[], int& c, int& d, int&e){
-    cout<<"profesor";
+    
     
     for(int i=0; i<N_FIL; i++) {
         hayFila = false;
