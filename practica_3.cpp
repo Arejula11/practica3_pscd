@@ -14,8 +14,8 @@ const int N_COL = 1000; //# de columnas
 //Pre: <fila> es un  ́ındice de fila de <D>
 //Post: devuelve el m ́aximo de la fila <fila>
 int maxFila(int D[N_FIL][N_COL],int fila) {
-    int max;
-    for(int i=0; i<N_COL; i++){
+    int max = D[fila][0];
+    for(int i=1; i<N_COL; i++){
         if(max<D[fila][i]){
             max=D[fila][i];
         }
@@ -36,12 +36,12 @@ int sumaFila(int D[N_FIL][N_COL],int fila) {
     return sum; 
 }
 
-void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Semaphore* rprimero[], Semaphore* rsegundo[], Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, const int pareja[], const int terminado, const bool examen_fin[], int a[], int b[], int& c, int& d, int&e){
+void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Semaphore* rprimero[], Semaphore& rsegundo, Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, const int pareja[], const int terminado, const bool examen_fin[], int a[], int& b, int& c, int& d, int&e){
     bool  ifComple = false;
     
     for (int i = 0; i < N_EST; i++)
     {
-       if (hayFila && pareja[i] && a[i]>0)
+       if ( examen_fin[i] && a[i]>0)
        {
         a[i]--;
         rprimero[i]->signal();
@@ -49,31 +49,26 @@ void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Sema
        }
        
     }
-    for (int i = N_EST; i < N_EST*2; i++)
-    {
-       if (examen_fin[i] && b[i]>0 && !ifComple )
-       {
-        b[i]--;
-        rsegundo[i]->signal();
-        ifComple = true;
-       }
-       
-    }
-    if(!ifComple){
-        if (silla<2 && c>0){
-        c--;
-        rtercero.signal();
     
-    }else if(terminado == 30 && d>0){
-        d--;
-        rcuarto.signal();
-    }
-    else if(silla == 2 && e>0){
-        e--;
-        rquinto.signal();
-    }else{
-        testigo.signal();
-    }
+    if(!ifComple){
+
+       if (hayFila && b>0 ){
+            b--;
+            rsegundo.signal();
+        }else if (silla<2 && c>0){
+            c--;
+            rtercero.signal();
+    
+        }else if(terminado == 30 && d>0){
+            d--;
+            rcuarto.signal();
+        }
+        else if(silla == 2 && e>0){
+            e--;
+            rquinto.signal();
+        }else{
+            testigo.signal();
+        }
     }
     
 
@@ -81,25 +76,27 @@ void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Sema
 
 //----------------------------------------------------
 void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& silla, int resultado[], bool examen_fin[],
-                int& silla1, int& silla2, int pareja[], Semaphore* rprimero[], Semaphore* rsegundo[], Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, Semaphore& testigo, int a[], int b[], int& c, int& d, int&e, int& terminado){
+                int& silla1, int& silla2, int pareja[], Semaphore* rprimero[], Semaphore& rsegundo, Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, Semaphore& testigo, int a[], int& b, int& c, int& d, int&e, int& terminado){
     // esperar por una silla libre
     //<await (silla<2) // una de las dos esté libre
    
         testigo.wait();
-        
         if(silla>=2){
             c++;
             testigo.signal();
             rtercero.wait();      
             
         }
-        silla++;
+        
         if(silla == 0){
             silla1 = nip;
-            cout<<silla1;
+            silla++;
+ // cout<<silla1<<endl;
         }else if(silla == 1){
             silla2 = nip;
-            cout<<silla2;
+            silla++;
+// cout<<silla2<<endl;
+// cout<<"SILLA"+ to_string(silla)+ '\n';
         }
         
         pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);
@@ -109,25 +106,23 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
     //esperar me sea asignada pareja y fila
    // <await (hayFila = true && pareja[nip]>=0 )
         testigo.wait();
-    
-        if(!hayFila && pareja[nip]<0){
-            a[nip]++;
+        if(!hayFila){
+            b++;
             testigo.signal();
-            rprimero[nip]->wait();
+            rsegundo.wait();
             
         }
         int miFila = fila;
         int miPareja = pareja[nip];
         silla = 0; 
+        hayFila = false;
         pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
          
         if (nip<miPareja) {
             // calcular máx de mi 
-            //<
             resultado[nip] = maxFila(D,miFila); // quitar exclusion mutua
             //hacérselo llegar a mi pareja
             examen_fin[nip]=true; 
-            pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
             
         }
         else {
@@ -137,9 +132,9 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
             //<await(examen_fin[miPareja]= true)
             testigo.wait();
             if(!examen_fin[miPareja]){
-                b[miPareja]++;
+                a[miPareja]++;
                 testigo.signal();
-                rsegundo[miPareja]->wait();
+                rprimero[miPareja]->wait();
             }
             //mostrar resultados
             pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//> // cambiar couts
@@ -154,11 +149,11 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
             //----------------------------------------------------
         } 
 }
-void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bool& hayFila, Semaphore* rprimero[], Semaphore* rsegundo[], Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, bool examen_fin[],const int terminado, Semaphore& testigo, int a[], int b[], int& c, int& d, int&e){
+void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bool& hayFila, Semaphore* rprimero[], Semaphore& rsegundo, Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, bool examen_fin[],const int terminado, Semaphore& testigo, int a[], int& b, int& c, int& d, int&e){
     
     
     for(int i=0; i<N_FIL; i++) {
-        hayFila = false;
+        
         // esperar a que haya dos
         //<await silla = 2
         testigo.wait(); //repasar todos   
@@ -175,6 +170,7 @@ void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bo
         pareja[silla1]= silla2;
         pareja[silla2] = silla1;
         fila = i;
+//cout<<"FILA"+ to_string(fila) + '\n';
         hayFila = true; 
         pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
 
@@ -235,7 +231,7 @@ int main(){
     for (int i = 0; i < N_EST; i++){
         rprimer[i] = new Semaphore(0); // inicializar punteros
     };  
-    Semaphore* rsegundo[N_EST];
+    Semaphore rsegundo(0);
     Semaphore rtercero(0);
     Semaphore rcuarto(0);
     Semaphore rquinto(0);
@@ -244,10 +240,7 @@ int main(){
     for (int i = 0; i < N_EST; i++){
         a[i] = 0; // inicializar vector
     };  
-    int b[N_EST];
-    for (int i = 0; i < N_EST; i++){
-        b[i] = 0; // inicializar vector
-    };  
+    int b = 0;
     int c = 0;
     int d = 0;
     int e = 0;
@@ -264,7 +257,7 @@ int main(){
     Profe= thread(&Profesor, ref(silla), ref(silla1), ref(silla2), ref(pareja), ref(fila), ref(hayFila), ref(rprimer),ref(rsegundo),ref(rtercero),ref(rcuarto),ref(rquinto),ref(examen_fin), terminado,ref(testigo), ref(a), ref(b), ref(c), ref(d), ref(e));
    
     for(int i=0; i<N_EST; i++){
-        Estu[i]= thread(&Estudiante, i-1, ref(fila), ref(hayFila), ref(D), ref(silla), ref(resultado), ref(examen_fin), ref(silla1), ref(silla2), ref(pareja), ref(rprimer),ref(rsegundo),ref(rtercero),ref(rcuarto),ref(rquinto), ref(testigo) ,ref(a), ref(b), ref(c), ref(d), ref(e), ref(terminado));
+        Estu[i]= thread(&Estudiante, i, ref(fila), ref(hayFila), ref(D), ref(silla), ref(resultado), ref(examen_fin), ref(silla1), ref(silla2), ref(pareja), ref(rprimer),ref(rsegundo),ref(rtercero),ref(rcuarto),ref(rquinto), ref(testigo) ,ref(a), ref(b), ref(c), ref(d), ref(e), ref(terminado));
     }
     
     Profe.join();
@@ -274,9 +267,7 @@ int main(){
     for (int i = 0; i < N_EST; i++){
         delete rprimer[i] ; // inicializar punteros
     };  
-    for (int i = 0; i < N_EST; i++){
-        delete rsegundo[i]; // inicializar punteros
-    };  
+    
     cout << "Prueba finalizada\n";
     return 0;
 
