@@ -62,7 +62,8 @@ void Estudiante(int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& sil
             //mostrar resultados
             cout<< left << setw(4)<<miFila << "|  " << setw(6) <<to_string(miPareja) + "-" + to_string(nip) << "|  "<< setw(7) <<resultado[miPareja]<< "|  "<<resultado[nip]<<endl;
             //comunicar finalizacíon
-            <examen_fin[nip] = true>;
+            <examen_fin[nip] = true;
+            terminado++;>;
             //----------------------------------------------------
 
     } 
@@ -77,9 +78,10 @@ void Profesor (int& silla, int& silla1, int& silla2, int pareja[N_EST], int fila
             pareja[silla2] = silla1;
             fila = i;
             hayFila = true;>
-        <await (terminado == 2)
+        <await (levantado == 2)
             silla = 0;
-            hayFila = false;>
+            hayFila = false;
+            levantado=0>
 
     }
     // esperar que todos hayan terminado
@@ -107,19 +109,43 @@ void leerFich(int D[N_FIL][N_COL]){
 int main(){
     int D[N_FIL][N_COL]; //para almacenar los datos
     int fila = 0;  //cada pareja coger ́a una
-    int pareja[N_EST]={-1}; //pareja[i] ser ́a la pareja asignada
-    bool examen_fin[N_EST] = {false};
-    bool estu_fin[N_FIL][2] = {false};
+    int pareja[N_EST]; //pareja[i] ser ́a la pareja asignada
+    for (int i = 0; i < N_EST; i++){
+        pareja[i] = -1; // inicializar vector
+    }
+    bool examen_fin[N_EST];
+    for (int i = 0; i < N_EST; i++){
+        examen_fin[i] = false; // inicializar vector
+    }
+    int terminado=0;
+    int levantado = 0;
     int silla = 0;  // 0 = 0 sillas ocupadas , 1 = una silla ocupada, 2 = 2 sillas ocupadas
     int silla1; // su valor es el del estudiante sentado
     int silla2; // su valor es el del estudiante sentado
     int resultado[N_EST];
-    bool hayFila;
-    int levantado = 0;
+    bool hayFila=false;
+
 
     //cargar "datos.txt" en "D"
     leerFich(D);
+    thread Estu[60]; 
+    thread Profe;
+    
+    Profe= thread(&Profesor, ref(silla), ref(silla1), ref(silla2), ref(pareja), ref(fila), ref(hayFila), ref(rprimer),ref(rsegundo),ref(rtercero),ref(rcuarto),ref(rquinto), ref(rsexto), ref(examen_fin), terminado,ref(testigo), ref(a), ref(b), ref(c), ref(d), ref(e), ref(f), ref(levantado));
+   
+    for(int i=0; i<N_EST; i++){
+        Estu[i]= thread(&Estudiante, i, ref(fila), ref(hayFila), ref(D), ref(silla), ref(resultado), ref(examen_fin), ref(silla1), ref(silla2), ref(pareja), ref(rprimer),ref(rsegundo),ref(rtercero),ref(rcuarto),ref(rquinto), ref(rsexto),ref(testigo) ,ref(a), ref(b), ref(c), ref(d), ref(e), ref(f), ref(terminado), ref(levantado));
+    }
+    
+    Profe.join();
+    for (int i = 0; i < N_EST; i++){
+        Estu[i].join();//me bloqueo hasta que "P[i]" termine
+    }
+   
+    
+    cout<<'\n';
     cout << "Prueba finalizada\n";
     return 0;
+
 
 }

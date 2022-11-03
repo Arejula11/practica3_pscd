@@ -120,9 +120,9 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
         }
         //mostrar resultados
         //cout << left  << setw(4)<< to_string(miFila) <<  "|  " << to_string(miPareja) <<"-"<<to_string(nip) <<  "|  " << setw(7) << to_string(resultado[miPareja]) <<"|  " << to_string(resultado[nip]) << '\n';
-        cout<< left << setw(4)<<miFila << "|  " << setw(6) <<to_string(miPareja) + "-" + to_string(nip) << "|  "<< setw(7) <<resultado[miPareja]<< "|  "<<resultado[nip]<<endl;
+        //cout<< left << setw(4)<<miFila << "|  " << setw(6) <<to_string(miPareja) + "-" + to_string(nip) << "|  "<< setw(7) <<resultado[miPareja]<< "|  "<<resultado[nip]<<endl;
         pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, rsexto, pareja,terminado,examen_fin, a, b, c, d, e, f, levantado);//> // cambiar couts
-        //cout << to_string(miFila) + "|  " + to_string(miPareja) + "-" + to_string(nip) +  "|  " + to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
+        cout << to_string(miFila) + "|  " + to_string(miPareja) + "-" + to_string(nip) +  "|  " + to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
         
 
         //comunicar finalizacíon
@@ -236,7 +236,7 @@ int main(){
    
     //cargar "datos.txt" en "D"
     leerFich(D);
-    thread Estu[60]; // cambiar
+    thread Estu[60]; 
     thread Profe;
     
     Profe= thread(&Profesor, ref(silla), ref(silla1), ref(silla2), ref(pareja), ref(fila), ref(hayFila), ref(rprimer),ref(rsegundo),ref(rtercero),ref(rcuarto),ref(rquinto), ref(rsexto), ref(examen_fin), terminado,ref(testigo), ref(a), ref(b), ref(c), ref(d), ref(e), ref(f), ref(levantado));
@@ -253,6 +253,7 @@ int main(){
         delete rprimer[i] ; 
     };  
     
+    cout<<'\n';
     cout << "Prueba finalizada\n";
     return 0;
 
