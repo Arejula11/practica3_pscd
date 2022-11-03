@@ -36,7 +36,7 @@ int sumaFila(int D[N_FIL][N_COL],int fila) {
     return sum; 
 }
 
-void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Semaphore* rprimero[], Semaphore* rsegundo[], Semaphore rtercero, Semaphore rcuarto, Semaphore rquinto, const int pareja[], const int terminado, const bool examen_fin[], int a[], int b[], int& c, int& d, int&e){
+void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Semaphore* rprimero[], Semaphore* rsegundo[], Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, const int pareja[], const int terminado, const bool examen_fin[], int a[], int b[], int& c, int& d, int&e){
     
     
     for (int i = 0; i < N_EST; i++)
@@ -76,7 +76,7 @@ void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Sema
 
 //----------------------------------------------------
 void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], int& silla, int resultado[], bool examen_fin[],
-                int& silla1, int& silla2, int pareja[],Semaphore* rpprimerori, Semaphore* rprimero[], Semaphore* rsegundo[], Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, Semaphore& testigo, int a[], int b[], int& c, int& d, int&e, int& terminado){
+                int& silla1, int& silla2, int pareja[], Semaphore* rprimero[], Semaphore* rsegundo[], Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, Semaphore& testigo, int a[], int b[], int& c, int& d, int&e, int& terminado){
     // esperar por una silla libre
     //<await (silla<2) // una de las dos esté libre
    
@@ -97,7 +97,7 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
             cout<<silla2;
         }
         
-        pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, rsegundo, rtercero,pareja,terminado,examen_fin, a, b, c, d, e);
+        pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);
         
     //> 
     
@@ -114,7 +114,7 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
         int miFila = fila;
         int miPareja = pareja[nip];
         silla = 0; 
-        pasarTestigo(testigo,d,silla,hayFila,r,pareja,terminado,examen_fin);//>
+        pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
          
         if (nip<miPareja) {
             // calcular máx de mi 
@@ -122,7 +122,7 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
             resultado[nip] = maxFila(D,miFila); // quitar exclusion mutua
             //hacérselo llegar a mi pareja
             examen_fin[nip]=true; 
-            pasarTestigo(testigo,d,silla,hayFila,r,pareja,terminado,examen_fin);//>
+            pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
             
         }
         else {
@@ -137,18 +137,18 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
                 rsegundo[miPareja]->wait();
             }
             //mostrar resultados
-            pasarTestigo(testigo,d,silla,hayFila,r,pareja,terminado,examen_fin);//> // cambiar couts
-            cout << left + setw(6) + to_string(miFila) + "|  " + to_string(miPareja) +"-"+ setw(4)+nip +  "|  " + setw(7) + to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
+            pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//> // cambiar couts
+            cout << left << setw(6) << to_string(miFila) + "|  " + to_string(miPareja) +"-"<< setw(4)<<nip +  "|  " << setw(7) << to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
             //comunicar finalizacíon
             //<
             testigo.wait();
             examen_fin[nip] = true;
             terminado++;
-            pasarTestigo(testigo,d,silla,hayFila,r,pareja,terminado,examen_fin);//>
+            pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
             //----------------------------------------------------
         } 
 }
-void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bool& hayFila, Semaphore* rprimero[], Semaphore* resegundo[], Semaphore rtercero, Semaphore rcuarto, Semaphore rquinto, bool examen_fin[],const int terminado, Semaphore& testigo, int a[], int b[], int& c, int& d, int&e){
+void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bool& hayFila, Semaphore* rprimero[], Semaphore* rsegundo[], Semaphore& rtercero, Semaphore& rcuarto, Semaphore& rquinto, bool examen_fin[],const int terminado, Semaphore& testigo, int a[], int b[], int& c, int& d, int&e){
     cout<<"profesor";
     
     for(int i=0; i<N_FIL; i++) {
@@ -161,7 +161,7 @@ void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bo
             testigo.signal();
             rquinto.wait();
         }
-        pasarTestigo(testigo,d,silla,hayFila,r,pareja,terminado,examen_fin);//>
+        pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
         //comunicar a cada uno su pareja, y la fila que les toca
         //<
         
@@ -170,7 +170,7 @@ void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bo
         pareja[silla2] = silla1;
         fila = i;
         hayFila = true; 
-        pasarTestigo(testigo,d,silla,hayFila,r,pareja,terminado,examen_fin);//>
+        pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//>
 
      }
     //pensar si mejor fin examen contador y termiando = true cuando el contador sea = 60 pq ahora habria que 
@@ -185,7 +185,7 @@ void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bo
             rcuarto.wait();
             
         }
-    pasarTestigo(testigo,d,silla,hayFila,r,pareja,terminado,examen_fin);
+    pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);
             //fin examen>
 
 }
@@ -230,7 +230,7 @@ int main(){
         rprimer[i] = new Semaphore(0); // inicializar punteros
     };  
     Semaphore* rsegundo[N_EST];
-    Semaphore rterco(0);
+    Semaphore rtercero(0);
     Semaphore rcuarto(0);
     Semaphore rquinto(0);
     Semaphore testigo(1);
@@ -255,10 +255,10 @@ int main(){
     thread Estu[60]; // cambiar
     thread Profe;
     
-    Profe= thread(&Profesor, ref(silla), ref(silla1), ref(silla2), ref(pareja), ref(fila), ref(hayFila), ref(r),ref(examen_fin), terminado,ref(testigo), ref(d));
+    Profe= thread(&Profesor, ref(silla), ref(silla1), ref(silla2), ref(pareja), ref(fila), ref(hayFila), ref(rprimer),ref(rsegundo),ref(rtercero),ref(rcuarto),ref(rquinto),ref(examen_fin), terminado,ref(testigo), ref(a), ref(b), ref(c), ref(d), ref(e));
    
     for(int i=0; i<N_EST; i++){
-        Estu[i]= thread(&Estudiante, i-1, ref(fila), ref(hayFila), ref(D), ref(silla), ref(resultado), ref(examen_fin), ref(silla1), ref(silla2), ref(pareja), ref(r), ref(testigo) , ref(d), ref(terminado));
+        Estu[i]= thread(&Estudiante, i-1, ref(fila), ref(hayFila), ref(D), ref(silla), ref(resultado), ref(examen_fin), ref(silla1), ref(silla2), ref(pareja), ref(rprimer),ref(rsegundo),ref(rtercero),ref(rcuarto),ref(rquinto), ref(testigo) ,ref(a), ref(b), ref(c), ref(d), ref(e), ref(terminado));
     }
     
     Profe.join();
