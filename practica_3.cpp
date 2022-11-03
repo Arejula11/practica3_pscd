@@ -138,7 +138,8 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
             }
             //mostrar resultados
             pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, pareja,terminado,examen_fin, a, b, c, d, e);//> // cambiar couts
-            cout << left << setw(6) << to_string(miFila) + "|  " + to_string(miPareja) +"-"<< setw(4)<<nip +  "|  " << setw(7) << to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
+            // cout << left << setw(6) << to_string(miFila) + "|  " + to_string(miPareja) +"-"<< setw(4)<<nip +  "|  " << setw(7) << to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
+            cout << to_string(miFila) + "|  " + to_string(miPareja) + "-" + to_string(nip) +  "|  " + to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
             //comunicar finalizacíon
             //<
             testigo.wait();
