@@ -11,7 +11,7 @@
 RM = /bin/rm -f  # para limpiar
 CC = g++         # compilador
 #---------------------------------------------------------
-SEM_LIB=./librerias/Semaphore_V4
+SEM_LIB=./material_apoyo/librerias/Semaphore_V4
 SEMAPHORE=${SEM_LIB}/Semaphore_V4
 #---------------------------------------------------------
 # opciones compilación y enlazado ("linkado")
