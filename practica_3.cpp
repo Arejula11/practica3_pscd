@@ -110,7 +110,6 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
     }else {
         // calcular la suma de mi fila 
         resultado[nip] = sumaFila(D, miFila);
-        //cout<<to_string(resultado[nip])+'\n';
         //coger info de max (de mi pareja) 
         //<await(examen_fin[miPareja]= true)
         testigo.wait();
@@ -120,9 +119,6 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
             rprimero[miFila]->wait();
         }
         //mostrar resultados
-        //cout << left  << setw(4)<< to_string(miFila) <<  "|  " << to_string(miPareja) <<"-"<<to_string(nip) <<  "|  " << setw(7) << to_string(resultado[miPareja]) <<"|  " << to_string(resultado[nip]) << '\n';
-
-        //cout<< left << setw(4)<<miFila << "|  " << setw(6) <<to_string(miPareja) + "-" + to_string(nip) << "|  "<< setw(7) <<resultado[miPareja]<< "|  "<<resultado[nip]<<endl;
         pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, rsexto, pareja,terminado,examen_fin, a, b, c, d, e, f, levantado);//> // cambiar couts
         cout << to_string(miFila) + "|  " + to_string(miPareja) + "-" + to_string(nip) +  "|  " + to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
 
@@ -130,9 +126,7 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
         //comunicar finalizacíon
         //<
         testigo.wait();
-        //examen_fin[nip] = true;
         terminado++;
-        // cout<<to_string(terminado)+'\n';
         pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, rsexto, pareja,terminado,examen_fin, a, b, c, d, e, f, levantado);//>
         } 
 }
@@ -254,7 +248,7 @@ int main(){
     for (int i = 0; i < N_EST; i++){
         delete rprimer[i] ; 
     };  
-    
+    cout<<'\n';
     cout << "Prueba finalizada\n";
     return 0;
 
