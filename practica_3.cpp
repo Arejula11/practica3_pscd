@@ -196,8 +196,8 @@ int main(){
     for (int i = 0; i < N_EST; i++){
         pareja[i] = -1; // inicializar vector
     }
-    bool examen_fin[N_EST]; 
-    for (int i = 0; i < N_EST; i++){
+    bool examen_fin[N_FIL]; 
+    for (int i = 0; i < N_FIL; i++){
         examen_fin[i] = false; // inicializar vector
     }
     int terminado = 0;
@@ -245,7 +245,7 @@ int main(){
     for (int i = 0; i < N_EST; i++){
         Estu[i].join();//me bloqueo hasta que "P[i]" termine
     }
-    for (int i = 0; i < N_EST; i++){
+     for (int i = 0; i < N_EST; i++){
         delete rprimer[i] ; 
     };  
     cout<<'\n';
