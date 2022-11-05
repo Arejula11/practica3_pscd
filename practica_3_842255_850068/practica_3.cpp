@@ -1,8 +1,17 @@
+/* ----------------------------------------------------------------------------
+* File:   practica_3.cpp
+* Author: Pablo Angusto Delgado 842255 y Miguel Aréjula Aisa 850068
+* Date:   noviembre 2022
+* Coms:   Práctica 3 de PSCD
+*         Compilar mediante
+*          make -f Makefile_p3
+* ----------------------------------------------------------------------------- */
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <thread>
-#include "material_apoyo/librerias/Semaphore_V4/Semaphore_V4.hpp"
+#include "./librerias/Semaphore_V4/Semaphore_V4.hpp"
 
 using namespace std;
 
@@ -13,8 +22,8 @@ const int N_COL = 1000; //# de columnas
 
 
 //---------------------------------------------------- 
-//Pre: <fila> es un  ́ındice de fila de <D>
-//Post: devuelve el m ́aximo de la fila <fila>
+//Pre: <fila> es un  índice de fila de <D>
+//Post: devuelve el máximo de la fila <fila>
 int maxFila(int D[N_FIL][N_COL],int fila) {
     int max = D[fila][0];
     for(int i=1; i<N_COL; i++){
@@ -26,7 +35,7 @@ int maxFila(int D[N_FIL][N_COL],int fila) {
 }
 
 
-//Pre: <fila> es un  ́ındice de fila de <D>
+//Pre: <fila> es un  índice de fila de <D>
 //Post: devuelve la suma de los els. de la fila <fila> 
 int sumaFila(int D[N_FIL][N_COL],int fila) {
     int sum = 0;
@@ -173,9 +182,9 @@ void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bo
             //fin examen>
 
 }
-
+//Inserta los datos del fichero "datos.txt" en la matriz D
 void leerFich(int D[N_FIL][N_COL]){
-    ifstream f("material_apoyo/datos.txt");
+    ifstream f("datos.txt");
     if(f.is_open()){
         for(int i=0; i<N_FIL; i++){
             for(int j=0; j<N_COL; j++){ 
