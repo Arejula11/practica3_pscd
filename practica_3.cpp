@@ -52,7 +52,7 @@ void pasarTestigo(Semaphore& testigo , const int silla, const bool hayFila, Sema
         }else if (silla<2 && c>0){
             c--;
             rtercero.signal();
-        }else if(terminado == 30 && d>0){
+        }else if(terminado == 60 && d>0){
             d--;
             rcuarto.signal();
         }else if(silla == 2 && e>0){
@@ -110,10 +110,11 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
     }else {
         // calcular la suma de mi fila 
         resultado[nip] = sumaFila(D, miFila);
+        //cout<<to_string(resultado[nip])+'\n';
         //coger info de max (de mi pareja) 
         //<await(examen_fin[miPareja]= true)
         testigo.wait();
-        if(!examen_fin[miFila]){
+        if(!examen_fin[miFila] ){
             a[miFila]++;
             testigo.signal();
             rprimero[miFila]->wait();
@@ -122,13 +123,13 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
         pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, rsexto, pareja,terminado,examen_fin, a, b, c, d, e, f, levantado);//> // cambiar couts
         cout << to_string(miFila) + "|  " + to_string(miPareja) + "-" + to_string(nip) +  "|  " + to_string(resultado[miPareja]) +"|  " + to_string(resultado[nip]) + '\n';
 
-
+        } 
         //comunicar finalizacíon
         //<
         testigo.wait();
         terminado++;
         pasarTestigo(testigo,silla,hayFila,rprimero, rsegundo, rtercero, rcuarto, rquinto, rsexto, pareja,terminado,examen_fin, a, b, c, d, e, f, levantado);//>
-        } 
+        
 }
 
 //----------------------------------------------------
@@ -163,7 +164,7 @@ void Profesor (int& silla, int& silla1, int& silla2, int pareja[], int& fila, bo
         // esperar que todos hayan terminado
         //<await(terminado=30)
     testigo.wait();
-    if(terminado!=30){
+    if(terminado!=60){
         d++;
         testigo.signal();
         rcuarto.wait();
@@ -193,9 +194,9 @@ int main(){
     int D[N_FIL][N_COL]; //para almacenar los datos
     int fila = 0;  //cada pareja cogerá una
     int pareja[N_EST]; //pareja[i] será la pareja asignada 
-    for (int i = 0; i < N_EST; i++){
-        pareja[i] = -1; // inicializar vector
-    }
+    // for (int i = 0; i < N_EST; i++){
+    //     pareja[i] = -1; // inicializar vector
+    // }
     bool examen_fin[N_FIL]; 
     for (int i = 0; i < N_FIL; i++){
         examen_fin[i] = false; // inicializar vector
