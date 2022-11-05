@@ -110,7 +110,6 @@ void Estudiante(const int nip,int& fila,  bool& hayFila, int D[N_FIL][N_COL], in
     }else {
         // calcular la suma de mi fila 
         resultado[nip] = sumaFila(D, miFila);
-        //cout<<to_string(resultado[nip])+'\n';
         //coger info de max (de mi pareja) 
         //<await(examen_fin[miPareja]= true)
         testigo.wait();
@@ -194,9 +193,6 @@ int main(){
     int D[N_FIL][N_COL]; //para almacenar los datos
     int fila = 0;  //cada pareja cogerá una
     int pareja[N_EST]; //pareja[i] será la pareja asignada 
-    // for (int i = 0; i < N_EST; i++){
-    //     pareja[i] = -1; // inicializar vector
-    // }
     bool examen_fin[N_FIL]; 
     for (int i = 0; i < N_FIL; i++){
         examen_fin[i] = false; // inicializar vector
